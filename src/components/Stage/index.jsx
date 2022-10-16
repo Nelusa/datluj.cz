@@ -17,18 +17,31 @@ const generateWord = (size) => {
 };
 
 const Stage = () => {
-  const [words, setWords] = useState(['jahoda']);
+  const [words, setWords] = useState(['jahoda', 'malina', 'okurka']);
+  const [mistakesCount, setMistakesCount] = useState(0);
 
   const handleFinish = () => {
-    setWords([generateWord(10)]);
+    // tady si musíme nastavit nové pole s tím, že se první prvek odebere, ale délka zůstane stejná --> ...words.slice(0),
+    setWords([...words.slice(1), generateWord(10)]);
+  };
+
+  const handleMistake = () => {
+    setMistakesCount(mistakesCount + 1);
   };
 
   return (
     <div className="stage">
-      <div className="stage__mistakes">Chyb: 0</div>
+      <div className="stage__mistakes">Chyb: {mistakesCount}</div>
       <div className="stage__words">
-        {words.map((word) => (
-          <Wordbox word={word} key={word} onFinish={handleFinish} />
+        {words.map((word, index) => (
+          <Wordbox
+            word={word}
+            key={word}
+            onFinish={handleFinish}
+            // pouze první prvek je aktivní (index === 0)
+            active={index === 0 ? true : false}
+            onMistake={handleMistake}
+          />
         ))}
       </div>
     </div>
